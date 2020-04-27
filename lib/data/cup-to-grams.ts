@@ -56,6 +56,8 @@ const cupConversions: CupData = {
     },
     "butter, margarine": 225,
 
+    "mayo, mayonnaise": 228,
+
     "molasses, black treacle": 325,
     "honey": 340,
     "syrup, treacle": {
@@ -70,7 +72,9 @@ const cupConversions: CupData = {
     barley: {
         "*pearl, pearled": 200,
     },
-    "vegetable shortening": 190,
+    "shortening": {
+        "*vegetable": 190,   
+    },
     "lard": 225,
 
     "sultana, raisin": 170,
@@ -128,6 +132,13 @@ const cupConversions: CupData = {
     },
 
     "salt, table salt": 300,
+    // natural salt is 3/4 of that...
+
+    "soy sauce": 276,
+    "miso": 276,
+    "mirin": 276,
+
+    // TODO double cream and so on
 
     cheese: {
         "*cream, soft": 120,
@@ -136,7 +147,10 @@ const cupConversions: CupData = {
             "cheddar": 120,
             "parmesan": 80,
         },
+        "powder, powdered": 108,
     },
+
+    "yoghurt, yogurt": 252,
 
     pecan: {
         "*whole": 125,
@@ -161,6 +175,7 @@ const cupConversions: CupData = {
         "dry": 150,
         fresh: 60,
     },
+    "panko, panko breadcrumbs": 48,
     "graham crumb": 225,
 
     "dry pasta": 120,
@@ -173,6 +188,16 @@ const cupConversions: CupData = {
     },
     // e.g. vegetable oil, sesame oil etc.
     "oil": LIQUID,
+    "vinegar": LIQUID,
+
+    "tomato": {
+        "puree, pureed, purée, puréed": 276,
+        "ketchup": 288,
+    },
+
+    "worchester sauce, worchestershire sauce": 288,
+    "chuunou sauce, tonkatsu sauce, takoyaki sauce, okonomiyaki sauce": 300,
+    "mentsuyu": 276,
 };
 
 /*
