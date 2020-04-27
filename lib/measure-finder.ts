@@ -94,6 +94,10 @@ export class MeasureFinder {
         // Numbers should handle fractions, decimals, "16-oz", "5oz", possibly typos like 'tablespons'
         // OTOH we need to preserve the original HTML to do conversion!!
         // Can imagine stuff like '1 and a half' too
+        // Measures in cups/sticks; units (200'F), "1 can (8 ounce) of tomato sauce"
+        // American terms (eggplant, Canadian bacon)
+        // Ranges (1-2 cups)
+        // Infer oz is unit of volume or mass based on ingredient
         const unitRegex = Unit.regex();
         
         const pat = `(?:((?:(${numberRegex.source})\\s*(${unitRegex.source})))\\s*(?:\\w+\\s*){0,5})`;
