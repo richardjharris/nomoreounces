@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>No More Ounces! Options</title>
+    <style>
+      div {
+        margin-bottom: 1em;
+      }
+
+      input[type=checkbox] {
+        margin-right: 0.2em;
+      }
+
+      button#save {
+      }
+
+      span#status {
+        color: #a00;
+        font-weight: bold;
+        padding-top: 0.4em;
+        margin-left: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <input type="checkbox" id="opt-convert-spoons" name="convert-spoons">
+      <label for="opt-convert-spoons">Convert teaspoons and tablespoons to ml</label>
+    </div>
+    <div>
+      <input type="checkbox" id="opt-gas-mark" name="gas-mark">
+      <label for="opt-gas-mark">Show oven temperatures as Gas Mark rather than Celsius</label>
+    </div>
+    <div>
+      <input type="checkbox" id="opt-print-original" name="print-original">
+      <label for="opt-print-original">When printing, show the original measurement after the converted one</label>
+    </div>
+    
+    <div>
+        <button id="save">Save</button>
+        <span id="status"></div>
+    </div>
+  </body>
+  <script src="options.js"></script>
+</html>
