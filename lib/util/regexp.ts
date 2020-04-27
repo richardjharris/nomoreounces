@@ -11,13 +11,15 @@ export function buildAlternation(words: string[], flags?: string): RegExp {
 }
 
 // Template string allowing multiline regexes with comments
-export function rx(flags) { 
+export function rx(flags: string) { 
     const trailingComments = /\s+#.*$/gm;
     const surroundingWhitespace = /^\s+|\s+$/gm;
     const literalNewlines = /[\r\n]/g;
 
-    return (strings, ...values) => { 
-        function toPattern(pattern, rawString, i) { 
+    type TemplateArg = null | RegExp | string;
+
+    return (strings: TemplateStringsArray, ...values: TemplateArg[]) => { 
+        function toPattern(pattern: string, rawString: string, i: number) { 
             var value = values[i];
 
             if (value == null) { 
