@@ -3,7 +3,7 @@
     "description": "Convert US recipes to UK",
     "scripts": {
         "clean": "rm -rf dist",
-        "format": "prettier-eslint 'src/**/*.js' --write",
+        "format": "prettier 'lib/**/*.ts' --write",
         "build": "npm run clean && webpack",
         "test": "mocha -r ts-node/register 'tests/**/*.spec.ts'"
     },
@@ -29,5 +29,17 @@
         "lodash": "^4.17.15",
         "pluralize": "^8.0.0",
         "tslib": "^1.11.1"
+    },
+    "prettier": {
+        "printWidth": 80,
+        "tabWidth": 4,
+        "useTabs": false,
+        "semi": true,
+        "singleQuote": true,
+        "quoteProps": "consistent",
+        "bracketSpacing": true,
+        "trailingComma": "all",
+        "arrowParens": "always",
+        "endOfLine": "lf"
     }
 }
