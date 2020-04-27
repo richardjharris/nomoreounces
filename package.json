@@ -24,11 +24,9 @@
         "webpack-cli": "^3.3.11"
     },
     "dependencies": {
-        "fahrenheit-to-celsius": "^1.0.0",
         "he": "^1.2.0",
         "lodash": "^4.17.15",
         "pluralize": "^7.0.0",
-        "recipe-ingredient-parser": "^1.5.6",
         "tslib": "^1.11.1"
     }
 }
