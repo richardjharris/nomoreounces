@@ -6,3 +6,5 @@ dist/
 app/convert.bundle.js
 app/convert.bundle.js.map
 convertcups/
+*.rej
+*.orig
