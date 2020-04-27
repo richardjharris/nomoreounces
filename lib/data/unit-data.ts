@@ -2,13 +2,13 @@
  * Thing that the unit measures. Conversion between domains can occasionally
  * be done if the ingredient is known.
  */
-export type UnitDomain = "mass" | "volume";
+export type UnitDomain = 'mass' | 'volume';
 
 /**
  * Indicates metric or imperial system of units, to allow converting from
  * one to the other.
  */
-export type UnitSystem = "metric" | "imperial";
+export type UnitSystem = 'metric' | 'imperial';
 
 /**
  * Multiplier to convert from the imperial unit with value=1 to the metric unit
@@ -16,12 +16,12 @@ export type UnitSystem = "metric" | "imperial";
  */
 export const imperialToMetricMultiplier: Record<UnitDomain, number> = {
     // lb -> gram
-    "mass": 453.592,
+    mass: 453.592,
     // fl. oz. -> litre
-    "volume": 1/33.8140226,
+    volume: 1 / 33.8140226,
 };
 
-type UnitDataEntry = {name: string, value: number, altnames: string[]};
+type UnitDataEntry = { name: string; value: number; altnames: string[] };
 export type UnitData = Record<UnitDomain, Record<UnitSystem, UnitDataEntry[]>>;
 
 /**
@@ -29,12 +29,12 @@ export type UnitData = Record<UnitDomain, Record<UnitSystem, UnitDataEntry[]>>;
  * relative within the same domain/system.
  * This could be JSON but we want to use comments and inline calculations for readability.
  */
-export const unitData : UnitData = {
+export const unitData: UnitData = {
     mass: {
         metric: [
             {
                 name: 'milligram',
-                value: 1/1000,
+                value: 1 / 1000,
                 altnames: ['mg'],
             },
             {
@@ -51,7 +51,7 @@ export const unitData : UnitData = {
         imperial: [
             {
                 name: 'ounce',
-                value: 1/16,
+                value: 1 / 16,
                 altnames: ['oz'],
             },
             {
@@ -65,22 +65,22 @@ export const unitData : UnitData = {
         metric: [
             {
                 name: 'cubic centimeter',
-                value: 1/1000,
+                value: 1 / 1000,
                 altnames: ['cc', 'cubic centimetre', 'cubic cm'],
             },
             {
                 name: 'millilitre',
-                value: 1/1000,
+                value: 1 / 1000,
                 altnames: ['ml', 'milliliter'],
             },
             {
                 name: 'centilitre',
-                value: 1/100,
+                value: 1 / 100,
                 altnames: ['cl', 'centiliter'],
             },
             {
                 name: 'declilitre',
-                value: 1/10,
+                value: 1 / 10,
                 altnames: ['dl', 'deliliter'],
             },
             {
@@ -92,13 +92,13 @@ export const unitData : UnitData = {
         imperial: [
             {
                 name: 'teaspoon',
-                value: 1/6,
+                value: 1 / 6,
                 altnames: ['tsp', 'tspn'],
             },
             {
                 // US tablespoon (vs. UK: 0.51, Australian: 0.68)
                 name: 'tablespoon',
-                value: 1/2,
+                value: 1 / 2,
                 altnames: ['tbs', 'tbsp', 'tbspn'],
             },
             {
@@ -136,7 +136,7 @@ export const unitData : UnitData = {
                 name: 'stick',
                 value: 4,
                 altnames: ['stk'],
-            }  
+            },
         ],
     },
 };

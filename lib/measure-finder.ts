@@ -20,7 +20,7 @@ export class Measure {
      *     that corresponds to this measurement. This may be somewhat different,
      *     for example a string like '2 and a half cups of sugar' could correspond
      *     to a Measure(unit=cup, amount=2.5). This is used when converting the units.
-     * 
+     *
      * @param context - String representing the originally matched text and its
      *     surrounding context (typically a few words either side). This is used to
      *     determine the ingredient during cup conversions.
@@ -44,19 +44,20 @@ export class Measure {
 
     /**
      * @return the number of grams this measure would weigh.
-     * 
+     *
      * Intended for use with volume ingredients such as '1 cup sugar'
      * where we need to convert to a metric mass.
      */
     toGrams(): number {
         if (this.unit.domain == 'mass') {
             return this.unit.convert(this.amount).to('grams');
-        }
-        else {
+        } else {
             // Measurement is volume, so use cup conversion
             var cupToG = cupToGrams(this.context);
             if (cupToG === null) {
-                throw new Error(`conversion to grams failed: unknown ingredient '${this.context}'`)
+                throw new Error(
+                    `conversion to grams failed: unknown ingredient '${this.context}'`,
+                );
             }
             return this.unit.convert(this.amount).to('cup') * cupToG;
         }
@@ -65,13 +66,15 @@ export class Measure {
     /**
      * @return this measure in string form. Where possible, attempts to
      *     copy the style of the originally matched string.
-     * 
+     *
      * @todo Consider moving `originalString` to be an argument of this
      *     function, and creating a `MeasureMatch` or similar object.
      */
     toString(): string {
         // XXX Pick the correct unit name to use, and pluralize.
-        return `${this.amount} ${this._isShortForm ? this.unit.shortForm() : this.unit.name}`;
+        return `${this.amount} ${
+            this._isShortForm ? this.unit.shortForm() : this.unit.name
+        }`;
     }
 }
 
@@ -82,8 +85,8 @@ export class Measure {
 export class MeasureFinder {
     /**
      * Given an arbitrary string, scan for ingredient strings such as '20 grams of flour'
-     * - strings that contain a unit, amount and optional ingredient name. 
-     * 
+     * - strings that contain a unit, amount and optional ingredient name.
+     *
      * @param text Text to scan
      * @returns iterable of {@link Measure} objects representing matches
      */
@@ -99,7 +102,7 @@ export class MeasureFinder {
         // Ranges (1-2 cups)
         // Infer oz is unit of volume or mass based on ingredient
         const unitRegex = Unit.regex();
-        
+
         const pat = `(?:((?:(${numberRegex.source})\\s*(${unitRegex.source})))\\s*(?:\\w+\\s*){0,5})`;
         const regex = new RegExp('(?:^|\\b)' + pat + '(?:$|\\b)', 'gi');
         var matches = [];
@@ -108,15 +111,17 @@ export class MeasureFinder {
             match = regex.exec(text);
             if (match) {
                 var amount = parseFraction(match[2]);
-                if (amount != `${+amount}`) continue; 
+                if (amount != `${+amount}`) continue;
                 var unit = Unit.fromString(match[3]);
                 if (unit === null) continue;
-                matches.push(new Measure(
-                    unit,
-                    (+amount),
-                    match[1],  // orignalString?
-                    match[0],  // context
-                ));
+                matches.push(
+                    new Measure(
+                        unit,
+                        +amount,
+                        match[1], // orignalString?
+                        match[0], // context
+                    ),
+                );
             }
         } while (match);
 

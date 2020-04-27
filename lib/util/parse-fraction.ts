@@ -4,8 +4,8 @@
 import { buildAlternationRaw } from './regexp';
 
 var he = require('he');
-const convertSubscript = mapNumerals("₀₁₂₃₄₅₆₇₈₉");
-const convertSuperscript = mapNumerals("⁰¹²³⁴⁵⁶⁷⁸⁹");
+const convertSubscript = mapNumerals('₀₁₂₃₄₅₆₇₈₉');
+const convertSuperscript = mapNumerals('⁰¹²³⁴⁵⁶⁷⁸⁹');
 
 const fractionGlyphs: { [key: string]: string } = {
     '¼': '1/4',
@@ -25,7 +25,7 @@ const fractionGlyphs: { [key: string]: string } = {
     '⅛': '1/8',
     '⅜': '3/8',
     '⅝': '5/8',
-    '⅞': '7/8'
+    '⅞': '7/8',
 };
 
 const fractionSlash = /⁄/g;
@@ -58,7 +58,7 @@ function mapNumerals(cipher: string): (_: string) => string {
 // TODO constanize these regexes
 export function parseFraction(text: string): string {
     text = he.decode(text);
-    
+
     Object.entries(fractionGlyphs).forEach(([glyph, textForm]) => {
         text = text.replace(glyph, ' ' + textForm + '');
     });
@@ -66,26 +66,28 @@ export function parseFraction(text: string): string {
     text = text.replace(fractionSlash, '/');
 
     // Match fractions, removing spacing and converting sub-/super-script numerals
-    text = text.replace(/([⁰¹²³⁴⁵⁶⁷⁸⁹\d]+)\s*\/\s*([₀₁₂₃₄₅₆₇₈₉\d]+)/g, (_, a, b) =>
-        convertSuperscript(a) + "/" + convertSubscript(b));
+    text = text.replace(
+        /([⁰¹²³⁴⁵⁶⁷⁸⁹\d]+)\s*\/\s*([₀₁₂₃₄₅₆₇₈₉\d]+)/g,
+        (_, a, b) => convertSuperscript(a) + '/' + convertSubscript(b),
+    );
 
     // Convert fractions to decimal
     const fracRe = /(\d+)\/(\d+)/;
     const numRe = /(\d+(?:\.\d+)?)/;
     const pattern = new RegExp(
-        `(?:${fracRe.source}|${numRe.source}(?:\\s+${fracRe.source})?)`, 'g');
+        `(?:${fracRe.source}|${numRe.source}(?:\\s+${fracRe.source})?)`,
+        'g',
+    );
 
-    return text.replace(pattern,
-        (_, g1, g2, num, f1, f2) => {
+    return text
+        .replace(pattern, (_, g1, g2, num, f1, f2) => {
             if (g1 !== undefined) {
                 return g1 / g2;
-            }
-            else if (f1 != undefined) {
-                return parseInt(num) + (f1 / f2);
-            }
-            else {
+            } else if (f1 != undefined) {
+                return parseInt(num) + f1 / f2;
+            } else {
                 return num;
             }
-        }
-    ).trim();
+        })
+        .trim();
 }

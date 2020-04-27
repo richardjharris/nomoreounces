@@ -1,7 +1,7 @@
 // Chart of maximum temperatures for gas mark values,
 // with 'typical' value indicated in comments
 const celsiusTempForMark = [
-    0,   // 1/4 = 107, 1/2 = 121
+    0, // 1/4 = 107, 1/2 = 121
     140, // 1: 135
     150, // 2: 149
     160, // 3: 163
@@ -19,7 +19,7 @@ const celsiusTempForMark = [
 export function gasMarkToCelsius(mark: number): number {
     // Return the maximum temperature
     if (mark < 0 || mark >= celsiusTempForMark.length) {
-        throw new Error(`invalid mark '${mark}'`)
+        throw new Error(`invalid mark '${mark}'`);
     }
     if (mark <= 0.25) return 107;
     if (mark <= 0.5) return 121;
@@ -31,7 +31,7 @@ export function celsiusToGasMark(celsius: number): number {
     if (celsius <= 110) return 0.25;
     if (celsius <= 130) return 0.5;
 
-    for(const [gasMark, maxTemp] of celsiusTempForMark.entries()) {
+    for (const [gasMark, maxTemp] of celsiusTempForMark.entries()) {
         if (celsius <= maxTemp) {
             return gasMark;
         }
@@ -39,4 +39,3 @@ export function celsiusToGasMark(celsius: number): number {
     // Assume largest gas mark
     return celsiusTempForMark.length;
 }
-

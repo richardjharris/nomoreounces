@@ -3,16 +3,16 @@ import { convertOvenTemperatures } from './util/convert-oven-temperatures';
 
 /**
  * Converts arbitrary US-centric recipe text to UK-centric text.
- * 
+ *
  * @remarks
  * This function accepts arbitrary text, but is optimised for elements
  * of e.g. a recipe list. It will scan the text for unit expressions such
  * as fluid ounces or cups, and convert the expression to a metric unit.
  * It will also convert American ingredient names ('cilantro' etc.) and
  * Fahrenheit oven temperatures.
- * 
+ *
  * Cups are assumed to be American (240ml)
- * 
+ *
  * @param text - Plain text to convert
  * @returns Converted text
  */
@@ -26,15 +26,13 @@ export function convertRecipeText(text: string): string {
     for (const match of MeasureFinder.findAll(text)) {
         if (match.unit.isMetric()) {
             // No need to convert
-        }
-        else if (match.unit.name == 'cup') {
+        } else if (match.unit.name == 'cup') {
             // Cup conversions require the ingredient. This involves searching nearby
             // text for an ingredient name and looking up the cups -> gram conversion
             // TODO or 'stick'
             match.setUnitAndAmount('gram', match.toGrams());
             if (match.unit.shortForm()) match.isShortForm();
-        }
-        else {
+        } else {
             // Imperial unit, perform conversion
             // TODO fluid ounce may be called ounce
             const result = match.unit.convert(match.amount).toBest('metric');

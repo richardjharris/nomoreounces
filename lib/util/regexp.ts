@@ -1,5 +1,5 @@
 export function escape(string: string): string {
-    return string.replace(/(?:[.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    return string.replace(/(?:[.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
 }
 
 export function buildAlternationRaw(words: string[]): string {
@@ -11,22 +11,22 @@ export function buildAlternation(words: string[], flags?: string): RegExp {
 }
 
 // Template string allowing multiline regexes with comments
-export function rx(flags: string) { 
+export function rx(flags: string) {
     const trailingComments = /\s+#.*$/gm;
     const surroundingWhitespace = /^\s+|\s+$/gm;
     const literalNewlines = /[\r\n]/g;
 
     type TemplateArg = null | RegExp | string;
 
-    return (strings: TemplateStringsArray, ...values: TemplateArg[]) => { 
-        function toPattern(pattern: string, rawString: string, i: number) { 
+    return (strings: TemplateStringsArray, ...values: TemplateArg[]) => {
+        function toPattern(pattern: string, rawString: string, i: number) {
             var value = values[i];
 
-            if (value == null) { 
+            if (value == null) {
                 return pattern + rawString;
             }
 
-            if (value instanceof RegExp) { 
+            if (value instanceof RegExp) {
                 value = value.source;
             }
 
