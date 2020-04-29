@@ -68,7 +68,7 @@ const cupConversions: CupData = {
     },
 
     'cornstarch, cornflour, corn starch, corn flour, maize flour': {
-        '*': 100,
+        '*': 120,
         'masa': 114,
     },
     'cornmeal, polenta, corn meal': 150,

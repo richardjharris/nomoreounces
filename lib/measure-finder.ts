@@ -1,6 +1,7 @@
 import { Unit } from './unit';
 import { regex as numberRegex, parseFraction } from './util/parse-fraction';
 import { cupToGrams } from './data/cup-to-grams';
+import { rx } from './util/regexp';
 
 const ONE_STICK_OF_BUTTER_GRAMS = 113;
 const ONE_TEASPOON_ML = 5;
@@ -31,6 +32,8 @@ export class Measure {
         public originalString: string,
         public context: string,
         public _isShortForm: boolean = false,
+        public _isSpaceAfter: boolean = true,
+        public _isPlural: boolean = false,
     ) {}
 
     setUnitAndAmount(unit: Unit | string, amount: number) {
@@ -38,8 +41,44 @@ export class Measure {
         this.amount = amount;
     }
 
-    isShortForm(): void {
-        this._isShortForm = true;
+    shortForm(value: boolean): void {
+        this._isShortForm = value;
+    }
+
+    spaceAfter(value: boolean): void {
+        this._isSpaceAfter = value;
+    }
+
+    isPlural(value: boolean): void {
+        this._isPlural = value;
+    }
+
+    convertToMetric(): void {
+        if (this.unit.isMetric()) return;
+
+        const fromCup = this.unit.name == 'cup';
+    
+        if (fromCup) {
+            // Convert to g (or ml) depending on ingredient.
+            const g = this.toGrams();
+            // TODO better way of detecting 'is liquid'
+            if (g == ONE_CUP_LIQUID_ML * this.amount) {
+                this.setUnitAndAmount('millilitre', g);
+            } else {
+                this.setUnitAndAmount('gram', g);
+            }
+
+            // Use short forms for metric units.
+            this.shortForm(true);
+            this.spaceAfter(false);
+            this.isPlural(false);
+        } else {
+            // Imperial unit!
+            // TODO stick
+            const result = this.unit.convert(this.amount).toBest('metric');
+            console.log(this.unit, this.amount, result);
+            this.setUnitAndAmount(result.unit, result.val);
+        }
     }
 
     /**
@@ -72,7 +111,8 @@ export class Measure {
      */
     toString(): string {
         // XXX Pick the correct unit name to use, and pluralize.
-        return `${this.amount} ${
+        const space = this._isSpaceAfter ? ' ' : '';
+        return `${this.amount}${space}${
             this._isShortForm ? this.unit.shortForm() : this.unit.name
         }`;
     }
@@ -103,12 +143,27 @@ export class MeasureFinder {
         // Infer oz is unit of volume or mass based on ingredient
         const unitRegex = Unit.regex();
 
-        const pat = `(?:((?:(${numberRegex.source})\\s*(${unitRegex.source})))\\s*(?:\\w+\\s*){0,5})`;
-        const regex = new RegExp('(?:^|\\b)' + pat + '(?:$|\\b)', 'gi');
+        // TODO \w+ is far too strict...
+        // Matches: 0=whole string, 1 = unit + amount, 2 = unit, 3 = amount
+        const regex = rx('gi')`
+            (?:^|\b)
+            (?:
+                (?:
+                    (
+                        (${numberRegex})\s*(${unitRegex}(?:\b|$))
+                    )
+                )
+                \s*
+                (?:\w+\s*){0,5}
+                (?:$|\b)
+            )
+        `;
+        console.log(regex.source);
         var matches = [];
         var match;
         do {
             match = regex.exec(text);
+            console.log("match", match);
             if (match) {
                 var amount = parseFraction(match[2]);
                 if (amount != `${+amount}`) continue;

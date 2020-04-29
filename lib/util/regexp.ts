@@ -3,6 +3,8 @@ export function escape(string: string): string {
 }
 
 export function buildAlternationRaw(words: string[]): string {
+    // Sort strings longest first
+    words = words.sort((a, b) => b.length - a.length);
     return '(?:' + words.map(escape).join('|') + ')';
 }
 

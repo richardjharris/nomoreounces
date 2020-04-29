@@ -12,10 +12,10 @@ describe('Basic tests', () => {
                 let got = convert(input);
                 if (replace) {
                     let expected = input.replace(search, replace);
-                    expect(expected).to.equal(got);
+                    expect(got).to.equal(expected);
                 }
                 else {
-                    expect(search).to.equal(got);
+                    expect(got).to.equal(search);
                 }
             });
         }
@@ -26,12 +26,13 @@ describe('Basic tests', () => {
         const tests: TestCase[] = [
             ['4 cups vegetable oil for frying', '960ml vegetable oil for frying'],
             ['1 egg', '1 egg'],
+            // TODO convert cube size also
             ['1 1/2 pounds boneless, skinless chicken thighs, cut into 1/2 inch cubes',
                 '680g boneless, skinless chicken thighs, cut into 1/2 inch cubes'],
             ['1 teaspoon salt', '1 teaspoon (4g) salt'],
             ['1 teaspoon white sugar', '1 teaspoon (4g) sugar'],
             ['1 pinch white pepper', '1 pinch white pepper'],
-            ['1 cup cornstarch', '125g cornstarch'],
+            ['1 cup cornstarch', '120g cornstarch'],
             ['2 tablespoons vegetable oil', '2 tablespoons (18ml) vegetable oil'],
             ['3 tablespoons chopped green onion', '3 tablespoons (11g) chopped green onion'],
             ['1 clove garlic, minced', '1 clove garlic, minced'],

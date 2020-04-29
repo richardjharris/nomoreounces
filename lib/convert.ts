@@ -24,21 +24,8 @@ export function convertRecipeText(text: string): string {
     //  - unit names
     //  - amounts, either numeric or English ('2 and a half', 'two dozen', fractions)
     for (const match of MeasureFinder.findAll(text)) {
-        if (match.unit.isMetric()) {
-            // No need to convert
-        } else if (match.unit.name == 'cup') {
-            // Cup conversions require the ingredient. This involves searching nearby
-            // text for an ingredient name and looking up the cups -> gram conversion
-            // TODO or 'stick'
-            match.setUnitAndAmount('gram', match.toGrams());
-            if (match.unit.shortForm()) match.isShortForm();
-        } else {
-            // Imperial unit, perform conversion
-            // TODO fluid ounce may be called ounce
-            const result = match.unit.convert(match.amount).toBest('metric');
-            match.setUnitAndAmount(result.unit, result.val);
-        }
-
+        match.convertToMetric();
+        console.log("str", match.originalString, match.toString());
         // Replace the original text with the conversion
         text = text.replace(match.originalString, match.toString());
     }

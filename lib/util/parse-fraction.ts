@@ -1,7 +1,7 @@
 // Library to parse fractions such as '1 1/2 cups' and replace them with
 // decimals. Includes support for Unicode and HTML entities.
 
-import { buildAlternationRaw } from './regexp';
+import { buildAlternation, rx } from './regexp';
 
 var he = require('he');
 const convertSubscript = mapNumerals('₀₁₂₃₄₅₆₇₈₉');
@@ -31,13 +31,14 @@ const fractionGlyphs: { [key: string]: string } = {
 const fractionSlash = /⁄/g;
 
 // Regex representing everything we can convert
+// Must use non-capturing groups
 function _regex(): RegExp {
-    const unicode = buildAlternationRaw(Object.keys(fractionGlyphs));
-    const fraction = `(?:(?:[⁰¹²³⁴⁵⁶⁷⁸⁹\\d]+)\\s*[\\/⁄]\\s*(?:[₀₁₂₃₄₅₆₇₈₉\\d]+)|${unicode})/`;
-    const decimal = '(?:\\d+(?:\\.\\d+)?)';
-    const pattern = `(?:${fraction}|${decimal}(?:\\s+${fraction})?)`;
+    const unicode = buildAlternation(Object.keys(fractionGlyphs));
+    const fraction = rx('')`(?:(?:[⁰¹²³⁴⁵⁶⁷⁸⁹\d]+)\s*[\/⁄]\s*(?:[₀₁₂₃₄₅₆₇₈₉\d]+)|${unicode})`;
+    const decimal = /(?:\d+(?:\.\d+)?)/;
+    const pattern = rx('')`(?:${fraction}|${decimal}(?:\s+${fraction})?)`;
 
-    return new RegExp(pattern, 'i');
+    return pattern;
 }
 export const regex = _regex();
 

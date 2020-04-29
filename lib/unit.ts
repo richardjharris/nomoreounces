@@ -1,4 +1,4 @@
-import { buildAlternationRaw } from './util/regexp';
+import { buildAlternation, rx } from './util/regexp';
 import {
     unitData as rawUnitData,
     imperialToMetricMultiplier,
@@ -68,7 +68,9 @@ export class Unit {
         str = str.replace(/liter/i, 'litre');
         let unit = null;
 
-        const match = str.match(extractUnitData.regex);
+        const boundedRegex = rx('')`(?:\b|\d|^)${extractUnitData.regex}(?:\b|$)`;
+
+        const match = str.match(boundedRegex);
         if (match) {
             unit = extractUnitData.matchToUnit[match[0]];
             if (unit === undefined) {
@@ -297,8 +299,8 @@ function precomputeExtractUnitData(): ExtractUnitData {
         }
     }
 
-    const unitRegex = buildAlternationRaw(Object.keys(matchToUnit));
-    const regex = new RegExp('(?:^|\\b|\\d)' + unitRegex + '(?:$|\\b)', 'i');
+    const unitRegex = buildAlternation(Object.keys(matchToUnit));
+    const regex = rx('i')`${unitRegex}`;
 
     return { regex, matchToUnit, allUnits, nameToUnit, shortForm };
 }
