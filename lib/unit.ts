@@ -6,7 +6,7 @@ import {
     UnitSystem,
 } from './data/unit-data';
 
-import pluralize from 'pluralize';
+import pluralize, { plural } from 'pluralize';
 import { AssertionError } from 'assert';
 
 /** Represents a measurement unit. */
@@ -100,8 +100,24 @@ export class Unit {
     /**
      * Returns the shortest form of the unit, e.g. 'g' for grams
      */
-    shortForm(): string {
+    get shortForm(): string {
         return this.altnames[0];
+    }
+
+    /**
+     * Returns the plural long name of the unit.
+     */
+    get pluralName(): string {
+        return pluralize(this.name);
+    }
+
+    /**
+     * Returns the appropriate name for the unit given the parameters.
+     */
+    toString(val: number, shortForm: boolean) {
+        if (shortForm) return this.shortForm;
+        else if (val == 1.0) return this.name;
+        else return this.pluralName
     }
 
     /**

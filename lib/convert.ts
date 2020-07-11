@@ -1,5 +1,6 @@
 import { MeasureFinder } from './measure-finder';
 import { convertOvenTemperatures } from './util/convert-oven-temperatures';
+import { Unit } from './unit';
 
 /**
  * Converts arbitrary US-centric recipe text to UK-centric text.
@@ -24,10 +25,24 @@ export function convertRecipeText(text: string): string {
     //  - unit names
     //  - amounts, either numeric or English ('2 and a half', 'two dozen', fractions)
     for (const match of MeasureFinder.findAll(text)) {
-        match.convertToMetric();
-        console.log("str", match.originalString, match.toString());
+        let replacementText;
+
+        if (['tablespoon', 'teaspoon', 'dessert spoon'].includes(match.unit.name)) {
+            // Help the user by adding a millilitre (or gram) measurement afterwards
+            // Need to know if it's a liquid or not.
+            let metric = match.convertTo(Unit.named("millilitre"));
+            metric.shortForm(true);
+            metric.spaceAfter(false);
+            // Round to whole numbers
+            metric.setUnitAndAmount(metric.unit, Number(metric.amount.toFixed(0)));
+            replacementText = match.originalString + ' (' + metric.toString() + ')';
+        } else {
+            let metric = match.convertToMetric();
+            replacementText = metric.toString();
+        }
+
         // Replace the original text with the conversion
-        text = text.replace(match.originalString, match.toString());
+        text = text.replace(match.originalString, replacementText);
     }
 
     text = convertOvenTemperatures(text);

@@ -21,7 +21,11 @@ export const imperialToMetricMultiplier: Record<UnitDomain, number> = {
     volume: 1 / 33.8140226,
 };
 
-type UnitDataEntry = { name: string; value: number; altnames: string[] };
+type UnitDataEntry = {
+    name: string;
+    value: number;
+    altnames: string[],
+};
 export type UnitData = Record<UnitDomain, Record<UnitSystem, UnitDataEntry[]>>;
 
 /**
@@ -93,13 +97,13 @@ export const unitData: UnitData = {
             {
                 name: 'teaspoon',
                 value: 1 / 6,
-                altnames: ['tsp', 'tspn'],
+                altnames: ['tsp', 'tspn', 't'],
             },
             {
                 // US tablespoon (vs. UK: 0.51, Australian: 0.68)
                 name: 'tablespoon',
                 value: 1 / 2,
-                altnames: ['tbs', 'tbsp', 'tbspn'],
+                altnames: ['tbsp', 'tbs', 'tbspn', 'T'],
             },
             {
                 name: 'dessert spoon',

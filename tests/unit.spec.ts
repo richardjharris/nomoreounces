@@ -38,10 +38,28 @@ describe('Unit.allUnits', () => {
 });
 
 describe('Unit.shortForm', () => {
-    it('returnd a short form unit name', () => {
-        expect(g.shortForm()).equal('g');
-        expect(tsp.shortForm()).equal('tsp');
-        expect(flOz.shortForm()).equal('fl oz');
+    it('returns a short form unit name', () => {
+        expect(g.shortForm).equal('g');
+        expect(tsp.shortForm).equal('tsp');
+        expect(flOz.shortForm).equal('fl oz');
+    });
+});
+
+describe('Unit.pluralName', () => {
+    it('returns a plural unit name', () => {
+        expect(g.pluralName).equal('grams');
+        expect(tsp.pluralName).equal('teaspoons');
+    });
+});
+
+describe('Unit.toString', () => {
+    it('ensures short form is always singular', () => {
+        expect(g.toString(1, true)).equal('g');
+        expect(g.toString(100, true)).equal('g');
+    });
+    it('pluralizes correctly', () => {
+        expect(kg.toString(1, false)).equal('kilogram');
+        expect(kg.toString(100, false)).equal('kilograms');
     });
 });
 

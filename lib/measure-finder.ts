@@ -36,6 +36,10 @@ export class Measure {
         public _isPlural: boolean = false,
     ) {}
 
+    clone(): Measure {
+        return Object.create(this);
+    }
+
     setUnitAndAmount(unit: Unit | string, amount: number) {
         this.unit = typeof unit == 'string' ? Unit.named(unit) : unit;
         this.amount = amount;
@@ -49,12 +53,9 @@ export class Measure {
         this._isSpaceAfter = value;
     }
 
-    isPlural(value: boolean): void {
-        this._isPlural = value;
-    }
-
-    convertToMetric(): void {
-        if (this.unit.isMetric()) return;
+    convertToMetric(): Measure {
+        let m: Measure = this.clone();
+        if (this.unit.isMetric()) return m;
 
         const fromCup = this.unit.name == 'cup';
     
@@ -63,22 +64,36 @@ export class Measure {
             const g = this.toGrams();
             // TODO better way of detecting 'is liquid'
             if (g == ONE_CUP_LIQUID_ML * this.amount) {
-                this.setUnitAndAmount('millilitre', g);
+                m.setUnitAndAmount('millilitre', g);
             } else {
-                this.setUnitAndAmount('gram', g);
+                m.setUnitAndAmount('gram', g);
             }
 
             // Use short forms for metric units.
-            this.shortForm(true);
-            this.spaceAfter(false);
-            this.isPlural(false);
+            m.shortForm(true);
+            m.spaceAfter(false);
         } else {
             // Imperial unit!
             // TODO stick
             const result = this.unit.convert(this.amount).toBest('metric');
             console.log(this.unit, this.amount, result);
-            this.setUnitAndAmount(result.unit, result.val);
+            m.setUnitAndAmount(result.unit, result.val);
         }
+
+        return m;
+    }
+
+    convertTo(destUnit: Unit): Measure {
+        let m: Measure = this.clone();
+        if (this.unit == destUnit) return m;
+
+        // TODO cup conversion code is duplicated
+        // TOOO having two different type signatures for convert() is dumb
+
+        const amount = this.unit.convert(this.amount).to(destUnit);
+        m.setUnitAndAmount(destUnit, amount);
+
+        return m;
     }
 
     /**
@@ -112,9 +127,8 @@ export class Measure {
     toString(): string {
         // XXX Pick the correct unit name to use, and pluralize.
         const space = this._isSpaceAfter ? ' ' : '';
-        return `${this.amount}${space}${
-            this._isShortForm ? this.unit.shortForm() : this.unit.name
-        }`;
+
+        return `${this.amount}${space}${this.unit.toString(this.amount, this._isShortForm)}`;
     }
 }
 
@@ -158,12 +172,10 @@ export class MeasureFinder {
                 (?:$|\b)
             )
         `;
-        console.log(regex.source);
         var matches = [];
         var match;
         do {
             match = regex.exec(text);
-            console.log("match", match);
             if (match) {
                 var amount = parseFraction(match[2]);
                 if (amount != `${+amount}`) continue;
